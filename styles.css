@@ -27,12 +27,12 @@ body {
   color: whitesmoke;
 }
 
-.chessContainer {
+.chessSelector {
   display: flex;
   gap: 20px;
 }
 
-.chessContainer > button,
+.chessSelector > button,
 .reset {
   width: 150px;
   height: 35px;
@@ -44,12 +44,12 @@ body {
   transition: 0.3s;
 }
 
-.chessContainer > button:hover,
+.chessSelector > button:hover,
 .reset:hover {
   transform: scale(1.1);
 }
 
-.chessContainer > button:focus,
+.chessSelector > button:focus,
 .reset:focus {
   background-color: #0e7490;
   transform: scale(1.1);
