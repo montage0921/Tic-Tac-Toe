@@ -1,0 +1,89 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper {
+  margin-top: 80px;
+
+  padding: 40px 150px 40px 150px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #67e8f9;
+}
+
+.difficultySelector {
+  justify-self: end;
+}
+
+.difficultySelector select {
+  background-color: #67e8f9;
+  border: none;
+  border-bottom: 1px solid whitesmoke;
+  outline: none;
+  color: whitesmoke;
+}
+
+.chessContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.chessContainer > button,
+.reset {
+  width: 150px;
+  height: 35px;
+  border: none;
+  background-color: #06b6d4;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.chessContainer > button:hover,
+.reset:hover {
+  transform: scale(1.1);
+}
+
+.chessContainer > button:focus,
+.reset:focus {
+  background-color: #0e7490;
+  transform: scale(1.1);
+}
+
+.gameBoard {
+  background-color: #0369a1;
+  display: grid;
+  grid-template-columns: repeat(3, 5rem);
+  grid-template-rows: repeat(3, 5rem);
+  gap: 5px;
+}
+
+.gameBoard > div {
+  background-color: #0ea5e9;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.gameBoard > div:hover {
+  transform: scale(1.05);
+}
+
+.gameBoard > div:focus {
+  transform: scale(1);
+}
+
+.xImg,
+.oImg {
+  fill: white;
+}
+
+.gameController {
+  display: flex;
+  justify-content: center;
+}
