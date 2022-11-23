@@ -38,11 +38,39 @@ const gameLogic = (function () {
     turn++;
   };
 
-  const extractTurn = function () {
-    return turn;
+  const winCondition = function (turn) {
+    if (turn < 8) {
+      for (let i = 0; i <= 2; i++) {
+        if (
+          gameBoard[i].every((ele) => ele === `x`) ||
+          gameBoard.every((arr) => arr[i] === `x`) ||
+          (gameBoard[0][0] === `x` &&
+            gameBoard[1][1] === `x` &&
+            gameBoard[2][2] === `x`) ||
+          (gameBoard[0][2] === `x` &&
+            gameBoard[1][1] === `x` &&
+            gameBoard[2][0] === `x`)
+        )
+          console.log(`X Win`);
+        else if (
+          gameBoard[i].every(
+            (ele) =>
+              ele === `o` ||
+              gameBoard.every((arr) => arr[i] === `o`) ||
+              (gameBoard[0][0] === `o` &&
+                gameBoard[1][1] === `o` &&
+                gameBoard[2][2] === `o`) ||
+              (gameBoard[0][2] === `o` &&
+                gameBoard[1][1] === `o` &&
+                gameBoard[2][0] === `o`)
+          )
+        )
+          console.log(`O Win`);
+      }
+    } else if (turn === 8) console.log(`draw`);
   };
 
-  return { fillGameBoardArr, countTurn, extractTurn };
+  return { fillGameBoardArr, countTurn, winCondition };
 })();
 
 /////////////////////////////////////////////
@@ -79,10 +107,11 @@ const gameController = (function () {
     if (e.target.dataset) {
       [a, b] = e.target.dataset.grid.split(``);
       if (gameBoard[a][b] === `` && turn < 9) {
-        turn += 2;
         console.log(turn);
         gameLogic.fillGameBoardArr(a, b, yourChess);
         gameRender.renderGameBoard(a, b, yourChess);
+        gameLogic.winCondition(turn);
+        turn++;
 
         aComputer = getRandomNumber();
         bComputer = getRandomNumber();
@@ -95,6 +124,8 @@ const gameController = (function () {
 
           gameLogic.fillGameBoardArr(aComputer, bComputer, computerChess);
           gameRender.renderGameBoard(aComputer, bComputer, computerChess);
+          gameLogic.winCondition(turn);
+          turn++;
         }
       }
     }
