@@ -30,6 +30,7 @@ const gameLogic = (function () {
   let turn = 0;
   const gameBoard = setGameBoard.extractGameBoard();
   const wrapper = document.querySelector(`.wrapper`);
+
   wrapper.insertAdjacentHTML(`afterbegin`, ``);
 
   const fillGameBoardArr = function (rowIndex, eleIndex, chess) {
@@ -41,6 +42,7 @@ const gameLogic = (function () {
   };
 
   const winCondition = function (turn) {
+    let xWin, oWin, isDraw;
     if (turn < 9) {
       for (let i = 0; i <= 2; i++) {
         if (
@@ -53,12 +55,7 @@ const gameLogic = (function () {
             gameBoard[1][1] === `x` &&
             gameBoard[2][0] === `x`)
         ) {
-          wrapper.insertAdjacentHTML(
-            `afterbegin`,
-            `<div class="bannerContainer">
-            <div class="banner">X is the Winner 🏆</div>
-          </div>`
-          );
+          xWin = true;
         } else if (
           gameBoard[i].every(
             (ele) =>
@@ -72,25 +69,57 @@ const gameLogic = (function () {
                 gameBoard[2][0] === `o`)
           )
         ) {
-          wrapper.insertAdjacentHTML(
-            `afterbegin`,
-            `<div class="bannerContainer">
-            <div class="banner">O is the Winner 🏆</div>
-          </div>`
-          );
+          oWin = true;
         }
       }
     } else if (turn === 9) {
+      isDraw = true;
+    }
+
+    if (xWin) {
       wrapper.insertAdjacentHTML(
         `afterbegin`,
         `<div class="bannerContainer">
-        <div class="banner">Draw</div>
-      </div>`
+            <div class="banner">X is the Winner 🏆</div>
+          </div>`
+      );
+    } else if (oWin) {
+      wrapper.insertAdjacentHTML(
+        `afterbegin`,
+        `<div class="bannerContainer">
+            <div class="banner">O is the Winner 🏆</div>
+          </div>`
+      );
+    } else if (isDraw) {
+      wrapper.insertAdjacentHTML(
+        `afterbegin`,
+        `<div class="bannerContainer">
+                <div class="banner">Draw 🤷‍♂️</div>
+              </div>`
       );
     }
   };
 
-  return { fillGameBoardArr, countTurn, winCondition };
+  function reset(gameBoard) {
+    const empty = ``;
+    for (let i = 0; i <= 2; i++) {
+      for (let j = 0; j <= 2; j++) {
+        document.querySelector(`[data-grid="${i}${j}"]`).innerHTML = empty;
+        gameBoard[i][j] = empty;
+      }
+    }
+    const bannerClassName =
+      document.querySelectorAll(`.bannerContainer`)[0].className;
+
+    if (bannerClassName) {
+      wrapper.childNodes.forEach((child) => {
+        console.log(child.className);
+        if (child.className == bannerClassName) wrapper.removeChild(child);
+      });
+    }
+  }
+
+  return { fillGameBoardArr, winCondition, reset };
 })();
 
 /////////////////////////////////////////////
@@ -110,6 +139,7 @@ const gameRender = (function () {
 const gameController = (function () {
   //Query Selectors
   const gameBoardEle = document.querySelector(`.gameBoard`);
+  const resetBtn = document.querySelector(`.reset`);
 
   //Import Parameters
   const gameBoard = setGameBoard.extractGameBoard();
@@ -127,7 +157,6 @@ const gameController = (function () {
     if (e.target.dataset) {
       [a, b] = e.target.dataset.grid.split(``);
       if (gameBoard[a][b] === `` && turn < 9) {
-        console.log(turn);
         gameLogic.fillGameBoardArr(a, b, yourChess);
         gameRender.renderGameBoard(a, b, yourChess);
         gameLogic.winCondition(turn);
@@ -149,6 +178,11 @@ const gameController = (function () {
         }
       }
     }
+  });
+
+  resetBtn.addEventListener(`click`, function () {
+    turn = 0;
+    gameLogic.reset(gameBoard);
   });
 
   //function
