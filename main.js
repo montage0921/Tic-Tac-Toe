@@ -29,6 +29,8 @@ const player = function (chess) {
 const gameLogic = (function () {
   let turn = 0;
   const gameBoard = setGameBoard.extractGameBoard();
+  const wrapper = document.querySelector(`.wrapper`);
+  wrapper.insertAdjacentHTML(`afterbegin`, ``);
 
   const fillGameBoardArr = function (rowIndex, eleIndex, chess) {
     gameBoard[rowIndex][eleIndex] = chess;
@@ -39,7 +41,7 @@ const gameLogic = (function () {
   };
 
   const winCondition = function (turn) {
-    if (turn < 8) {
+    if (turn < 9) {
       for (let i = 0; i <= 2; i++) {
         if (
           gameBoard[i].every((ele) => ele === `x`) ||
@@ -50,9 +52,14 @@ const gameLogic = (function () {
           (gameBoard[0][2] === `x` &&
             gameBoard[1][1] === `x` &&
             gameBoard[2][0] === `x`)
-        )
-          console.log(`X Win`);
-        else if (
+        ) {
+          wrapper.insertAdjacentHTML(
+            `afterbegin`,
+            `<div class="bannerContainer">
+            <div class="banner">X is the Winner 🏆</div>
+          </div>`
+          );
+        } else if (
           gameBoard[i].every(
             (ele) =>
               ele === `o` ||
@@ -64,10 +71,23 @@ const gameLogic = (function () {
                 gameBoard[1][1] === `o` &&
                 gameBoard[2][0] === `o`)
           )
-        )
-          console.log(`O Win`);
+        ) {
+          wrapper.insertAdjacentHTML(
+            `afterbegin`,
+            `<div class="bannerContainer">
+            <div class="banner">O is the Winner 🏆</div>
+          </div>`
+          );
+        }
       }
-    } else if (turn === 8) console.log(`draw`);
+    } else if (turn === 9) {
+      wrapper.insertAdjacentHTML(
+        `afterbegin`,
+        `<div class="bannerContainer">
+        <div class="banner">Draw</div>
+      </div>`
+      );
+    }
   };
 
   return { fillGameBoardArr, countTurn, winCondition };
