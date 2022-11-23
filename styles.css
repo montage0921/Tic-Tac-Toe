@@ -44,17 +44,6 @@ body {
   transition: 0.3s;
 }
 
-.chessSelector > button:hover,
-.reset:hover {
-  transform: scale(1.1);
-}
-
-.chessSelector > button:focus,
-.reset:focus {
-  background-color: #0e7490;
-  transform: scale(1.1);
-}
-
 .gameBoard {
   background-color: #0369a1;
   display: grid;
@@ -86,4 +75,13 @@ body {
 .gameController {
   display: flex;
   justify-content: center;
+}
+
+.reset:hover {
+  transform: scale(1.1);
+}
+
+.reset:active {
+  background-color: #0e7490;
+  transform: scale(1.1);
 }

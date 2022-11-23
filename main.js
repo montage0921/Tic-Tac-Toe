@@ -1,73 +1,107 @@
-////////////////////////////////////////////////////////////////
-const gameBoard = (function () {
-  const gameBoardArr = new Array(9);
+const setGameBoard = (function () {
+  const gameBoardArr = [
+    [``, ``, ``],
+    [``, ``, ``],
+    [``, ``, ``],
+  ];
 
-  const fillGameBoardArr = function (index, player) {
-    if (gameBoardArr[index] === undefined) {
-      gameBoardArr[index] = player.chooseChess();
-    }
+  const extractGameBoard = function () {
+    return gameBoardArr;
   };
 
-  const renderGameBoard = function (index, gridEle) {
-    if (gameBoardArr[index] === `x`) {
-      gridEle.insertAdjacentHTML(
-        "afterbegin",
-        `<img class="xImg" src="Sources/X.svg" alt="" />`
-      );
-    } else {
-      gridEle.insertAdjacentHTML(
-        "afterbegin",
-        `<img class="oImg" src="Sources/O.svg" alt="" />`
-      );
-    }
-  };
-
-  const resetBoardArr = function () {
-    for (let i = 0; i < gameBoardArr.length; i++) {
-      gameBoardArr[i] = undefined;
-      const gridNode = document.querySelector(`[data-grid="${i}"]`);
-      if (gridNode.hasChildNodes()) gridNode.removeChild(gridNode.firstChild);
-    }
-  };
-
-  return { fillGameBoardArr, renderGameBoard, resetBoardArr };
+  return { extractGameBoard };
 })();
 
-//////////////////////////////////////////////////////
-const gameController = (function () {
-  const player1 = players(`x`);
-  const player2 = players(`o`);
-  let isPlayed = false;
+/////////////////////////////////////////////
+const player = function (chess) {
+  const yourChess = chess;
 
-  const gameBoardElement = document.querySelector(`.gameBoard`);
-  const resetBtn = document.querySelector(`.reset`);
-
-  gameBoardElement.addEventListener(`click`, function (e) {
-    const index = e.target.dataset.grid;
-    const gridEle = document.querySelector(`[data-grid="${index}"]`);
-
-    if (isPlayed === false) {
-      gameBoard.fillGameBoardArr(index, player1);
-      gameBoard.renderGameBoard(index, gridEle);
-      isPlayed = true;
-    } else if (isPlayed === true) {
-      gameBoard.fillGameBoardArr(index, player2);
-      gameBoard.renderGameBoard(index, gridEle);
-      isPlayed = false;
-    }
-  });
-
-  resetBtn.addEventListener(`click`, function () {
-    gameBoard.resetBoardArr();
-    isPlayed = false;
-  });
-})();
-
-////////////////////////////////////////////////////////////////
-function players(chess) {
-  function chooseChess() {
+  function setChess() {
     return chess;
   }
 
-  return { chooseChess };
-}
+  return {
+    setChess,
+  };
+};
+
+/////////////////////////////////////////////
+const gameLogic = (function () {
+  let turn = 0;
+  const gameBoard = setGameBoard.extractGameBoard();
+
+  const fillGameBoardArr = function (rowIndex, eleIndex, chess) {
+    gameBoard[rowIndex][eleIndex] = chess;
+  };
+
+  const countTurn = function () {
+    turn++;
+  };
+
+  const extractTurn = function () {
+    return turn;
+  };
+
+  return { fillGameBoardArr, countTurn, extractTurn };
+})();
+
+/////////////////////////////////////////////
+const gameRender = (function () {
+  const gameBoard = setGameBoard.extractGameBoard();
+
+  const renderGameBoard = function (rowIndex, eleIndex, chess) {
+    document
+      .querySelector(`[data-grid="${rowIndex}${eleIndex}"]`)
+      .insertAdjacentHTML(`afterbegin`, chess);
+  };
+
+  return { renderGameBoard };
+})();
+
+/////////////////////////////////////////////
+const gameController = (function () {
+  //Query Selectors
+  const gameBoardEle = document.querySelector(`.gameBoard`);
+
+  //Import Parameters
+  const gameBoard = setGameBoard.extractGameBoard();
+
+  //Initialized Parameters
+  const yourChess = player(`x`).setChess();
+  const computerChess = player(`o`).setChess();
+  let aComputer, bComputer;
+
+  let index;
+  let turn = 0;
+
+  //event listener
+  gameBoardEle.addEventListener(`click`, function (e) {
+    if (e.target.dataset) {
+      [a, b] = e.target.dataset.grid.split(``);
+      if (gameBoard[a][b] === `` && turn < 9) {
+        turn += 2;
+        console.log(turn);
+        gameLogic.fillGameBoardArr(a, b, yourChess);
+        gameRender.renderGameBoard(a, b, yourChess);
+
+        aComputer = getRandomNumber();
+        bComputer = getRandomNumber();
+
+        if (turn < 9) {
+          while (gameBoard[aComputer][bComputer] !== ``) {
+            aComputer = getRandomNumber();
+            bComputer = getRandomNumber();
+          }
+
+          gameLogic.fillGameBoardArr(aComputer, bComputer, computerChess);
+          gameRender.renderGameBoard(aComputer, bComputer, computerChess);
+        }
+      }
+    }
+  });
+
+  //function
+  function getRandomNumber() {
+    return Math.floor(Math.random() * 3);
+  }
+})();
