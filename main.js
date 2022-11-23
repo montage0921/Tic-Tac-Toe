@@ -108,14 +108,10 @@ const gameLogic = (function () {
         gameBoard[i][j] = empty;
       }
     }
-    const bannerClassName =
-      document.querySelectorAll(`.bannerContainer`)[0].className;
+    const banners = document.getElementsByClassName(`bannerContainer`);
 
-    if (bannerClassName) {
-      wrapper.childNodes.forEach((child) => {
-        console.log(child.className);
-        if (child.className == bannerClassName) wrapper.removeChild(child);
-      });
+    while (banners.length > 0) {
+      banners[0].parentNode.removeChild(banners[0]);
     }
   }
 
